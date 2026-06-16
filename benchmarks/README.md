@@ -28,6 +28,38 @@ See `benchmarks/results/2026-06-15-llama3.2-local.md` for what to expect: the sk
 well on instruction-following models (Claude-class) but transfers poorly to small local
 models where the multi-step decision ladder isn't reliably followed.
 
+### Custom models via Bifrost
+
+Runs the same five tasks against models exposed by a Bifrost gateway. This script compares
+the same three arms (`baseline`, `caveman`, `ponytail`) and reports code LOC plus wall-clock
+time. It needs a `CXP_API_KEY` environment variable and defaults to
+`https://ai.netvlies.nl/v1`.
+
+Run from the repo root:
+
+```bash
+CXP_API_KEY=... python3 benchmarks/benchmark-bifrost.py --model "netvlies/gemma4-26b"
+CXP_API_KEY=... python3 benchmarks/benchmark-bifrost.py --model "stackit/gpt-oss-20b"
+CXP_API_KEY=... python3 benchmarks/benchmark-bifrost.py --model "stackit/gpt-oss-120b"
+CXP_API_KEY=... python3 benchmarks/benchmark-bifrost.py --model "stackit/qwen3-vl-235b"
+```
+
+Optional flags:
+
+```text
+--repeat N         Runs per cell; median is reported (default: 1)
+--gateway-url URL  Bifrost base URL (default: https://ai.netvlies.nl/v1)
+```
+
+Example with repeats:
+
+```bash
+CXP_API_KEY=... python3 benchmarks/benchmark-bifrost.py --model "netvlies/gemma4-26b" --repeat 5
+```
+
+Unlike the Claude promptfoo benchmark, this script currently records LOC and elapsed time only;
+it does not capture API cost or run the promptfoo correctness gate.
+
 Tasks: email validator, JS debounce, CSV sum, React countdown, FastAPI rate-limit (see `promptfooconfig.yaml`). Single-shot completions, default temperature.
 
 ## Median results (10 runs, 2026-06-13)
