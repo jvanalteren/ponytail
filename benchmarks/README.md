@@ -60,6 +60,39 @@ CXP_API_KEY=... python3 benchmarks/benchmark-bifrost.py --model "netvlies/gemma4
 Unlike the Claude promptfoo benchmark, this script currently records LOC and elapsed time only;
 it does not capture API cost or run the promptfoo correctness gate.
 
+### Turn results JSON into Markdown
+
+`benchmark-interpret.py` reads one of the benchmark JSON outputs, computes the tables locally,
+and asks the selected model to write the interpretation sections. The script renders the title,
+tables, and reproduce block itself so the output stays consistent with the repo's benchmark notes.
+
+Interpret the Bifrost results with the same configured model:
+
+```bash
+CXP_API_KEY=... python3 benchmarks/benchmark-interpret.py \
+	--input benchmarks/benchmark-bifrost-results.json \
+	--provider bifrost \
+	--model "netvlies/gemma4-26b"
+```
+
+Interpret a local Ollama run:
+
+```bash
+python3 benchmarks/benchmark-interpret.py \
+	--input benchmarks/benchmark-local-results.json \
+	--provider ollama \
+	--model llama3.2
+```
+
+Optional flags:
+
+```text
+--output PATH      Where to write the Markdown note
+--date YYYY-MM-DD  Date to embed in the title (default: today)
+--gateway-url URL  Bifrost base URL (default: https://ai.netvlies.nl/v1)
+--ollama-url URL   Ollama base URL (default: http://localhost:11434)
+```
+
 Tasks: email validator, JS debounce, CSV sum, React countdown, FastAPI rate-limit (see `promptfooconfig.yaml`). Single-shot completions, default temperature.
 
 ## Median results (10 runs, 2026-06-13)
